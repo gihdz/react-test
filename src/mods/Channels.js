@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'
 import ChannelForm from './ChannelForm'
+import { browserHistory } from 'react-router'
 
 var Channels = React.createClass({
   getInitialState: function(){
@@ -10,36 +11,27 @@ var Channels = React.createClass({
            formFunction: this.createChannel};
   },
   setChannels: function(){
-    var channels = [];
+    let channels = [];
     if(localStorage.channels) channels = JSON.parse(localStorage.channels);
     else{      
     channels = [
       {name: "Top Stories", url: "http://rss.cnn.com/rss/edition.rss", tags: ["sports", "breaking"]},
-      {name: "World", url: "http://rss.cnn.com/rss/edition_world.rss", tags: ["weather"]},
+      {name: "World", url: "http://rss.cnn.com/rss/edition_world.rs ds", tags: ["weather"]},
         {name: "Africa", url: "http://rss.cnn.com/rss/edition_africa.rss", tags: ["people"]}
       
     ];
     localStorage.channels = JSON.stringify(channels);
     }
-    this.setState({channels: channels});
-  },
- componentWillMount: function(){
-   this.setChannels();
-   
-  },
-  showModalForm: function(){
-    // $("#form-modal").modal("show");
-  },
-   addChannel: function(e){
-    this.setState({actionText:"Add Channel", selectedChannel: null, formFunction: this.createChannel}, this.showModalForm);
-     
+    this.setState({channels});
   },
   createChannel: function(value){
     if(!value || !value.name || !value.url || value.tags.length === 0) return;     
     localStorage.channels = JSON.stringify(this.state.channels.concat(value));
     this.setChannels();
   },
-    editChannel: function(e){
+    editChannel: function(index){
+      browserHistory.push(`channel/form/${index}`)
+
     // var trChannel = $(e.target).closest("tr");
     //   trChannel.removeData();
     // var id = trChannel.attr("id");
@@ -56,27 +48,17 @@ var Channels = React.createClass({
     localStorage.channels = JSON.stringify(this.state.channels);
     this.setState({selectedChannel: null});
     this.setChannels();
-     
-    
   },
-  deleteChannel: function(e){
-    // var id = $(e.target).closest("tr").attr("id");
-    // var channels = this.state.channels;
-    // channels.splice(id, 1);
-    // localStorage.channels = JSON.stringify(channels);
-    // this.setChannels();
+  deleteChannel: function(index){
+    var channels = this.state.channels;
+    channels.splice(index, 1);
+    localStorage.channels = JSON.stringify(channels);
+    this.setChannels();
   },
   
-
   componentDidMount: function(){
-    this.assignTooltip();
+    this.setChannels();
   }, 
-componentDidUpdate: function() {
-    this.assignTooltip();
-},
-  assignTooltip: function(){
-//  $('[data-toggle="tooltip"]').tooltip();    
-  },
   render: function(){
     var self = this;
     var result = (
@@ -91,7 +73,7 @@ componentDidUpdate: function() {
         
       }
       
-    channels = channels.map(function(channel, index){
+    channels = channels.map((channel, index) => {
       return(
         <tr id={index} data-channelname={channel.name} data-channelurl={channel.url} data-channeltags={channel.tags} key={index}>
           <td>
@@ -102,9 +84,9 @@ componentDidUpdate: function() {
             {channel.tags.join(", ")}
           </td>
           <td>
-            <button data-toggle="tooltip" title="Edit channel" onClick={self.editChannel}  type="button" className="btn btn-default">
+            <button data-toggle="tooltip" title="Edit channel" onClick={self.editChannel.bind(this, index)}  type="button" className="btn btn-default">
   <span className="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-          <button data-toggle="tooltip" title="Delete channel" onClick={self.deleteChannel}  type="button" className="btn btn-default">
+          <button data-toggle="tooltip" title="Delete channel" onClick={self.deleteChannel.bind(this, index)}  type="button" className="btn btn-default">
   <span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
             
@@ -132,10 +114,11 @@ componentDidUpdate: function() {
     var channel = this.state.selectedChannel ? this.state.selectedChannel : {name: "", url: "", tags: []};
     return(
       <div>
-        <h3><Link to="/channels">Channels</Link>{self.props.params.tag ? " > " + self.props.params.tag : ""}</h3> <button className="btn btn-default" type="button" onClick={this.addChannel}>Add Channel</button>
+        <h3><Link to="/channels">Channels</Link>{self.props.params.tag ? " > " + self.props.params.tag : ""}</h3> 
+        <Link to="/channel/form" className="btn btn-default"> Add Channel</Link>
+        
         <hr/>
       {result}        
-             <ChannelForm channel={channel} actionText={this.state.actionText} handleFormSubmit={this.state.formFunction} />
         </div>
     );
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router'
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 
 var App = React.createClass({

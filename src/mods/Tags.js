@@ -104,7 +104,7 @@ componentDidUpdate: function() {
           {tag}
           </td>
           <td>
-            <Link to={"/channels/" + tag} data-toggle="tooltip" title="View channels" data-placement="top" className="btn btn-default">
+            <Link to={"/channels/tag/" + tag} data-toggle="tooltip" title="View channels" data-placement="top" className="btn btn-default">
               <span className="glyphicon glyphicon-list" aria-hidden="true"></span></Link>
             
             <button data-toggle="tooltip" title="Edit tag" onClick={self.editTag}  type="button" className="btn btn-default">
@@ -140,7 +140,7 @@ componentDidUpdate: function() {
           <h3>Tags</h3> <button className="btn btn-default" type="button" onClick={this.addTag}>Add Tag</button>
         <hr/>
       {result}        
-             <TagForm tag={tag} actionText={this.state.actionText} handleFormSubmit={this.state.formFunction} />
+           {/*  <TagForm tag={tag} actionText={this.state.actionText} handleFormSubmit={this.state.formFunction} />*/}
         </div>
     );
   }
