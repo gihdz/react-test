@@ -1,5 +1,4 @@
 import React from 'react';
-import ModalFormTemplate from './ModalFormTemplate'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { browserHistory } from 'react-router'
@@ -41,17 +40,21 @@ var ChannelForm = React.createClass({
   },
   handleChange(input){
     // let change = {};
-    let value = input.target.value;
-    switch(input.target){
-      case this.inputChannel:
-      this.setState({channelName: value});
-      break;
-      case this.inputUrl:
-      this.setState({channelUrl: value});
-      break;
-      default:
-      break;
-    }
+    // let value = input.target.value;
+    // switch(input.target){
+    //   case this.inputChannel:
+    //   this.setState({channelName: value});
+    //   break;
+    //   case this.inputUrl:
+    //   this.setState({channelUrl: value});
+    //   break;
+    //   default:
+    //   break;
+    // }
+    this.setState({
+      channelName: this.inputChannel.value,
+      channelUrl: this.inputUrl.value
+    });
 
     // this.setState({change})
     // if(input.target == this.inputChannel) console.log("lile");
@@ -73,7 +76,7 @@ var ChannelForm = React.createClass({
   </div>
         <div className="form-group">
     <label htmlFor="inputChannelTags">Channel Tags</label>
-          <Select multi={true} name="inputChannelTags" value={this.state.channelTags} options={tags} onChange={this.handleTagsChange}  />
+          <Select multi={true} name="inputChannelTags" value={this.state.channelTags} options={tags} onChange={this.handleTagsChange} />
    
   </div>
   <button type="submit" className="btn btn-default" >Save</button>

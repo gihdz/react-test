@@ -1,34 +1,43 @@
 import React from 'react';
-import ModalFormTemplate from './ModalFormTemplate'
+import {browserHistory} from "react-router"
 
-var TagForm = React.createClass({
-  getInitialState: function(){
-    return {tagName:""};
-  },
-  handleNameChange: function(e){
-    this.setState({tagName: e.target.value});
-  },
+var TagForm = React.createClass({  
   handleSubmit: function(e){
-    var tagName = this.state.tagName;
-    this.setState({tagName: ""});
-    this.props.handleFormSubmit(tagName);
+    e.preventDefault();
+    if(!this.inputTag.value) return;
+    let tags = JSON.parse(localStorage.tags);
+    if(this.props.params.id >= 0){
+      let prevTag = tags[this.props.params.id];
+    tags[this.props.params.id] = this.inputTag.value;
+    let channels = JSON.parse(localStorage.channels);
+      channels = channels.map(channel => {
+        if(channel.tags.indexOf(prevTag) !== -1) channel.tags[channel.tags.indexOf(prevTag)] = this.inputTag.value;
+        return channel;
+      });
+      localStorage.channels = JSON.stringify(channels);
+    }
+    else tags.push(this.inputTag.value);
+    localStorage.tags = JSON.stringify(tags);
+    browserHistory.push("/tags");
   },
-  componentWillReceiveProps: function(nextProps){
-    this.setState({tagName: nextProps.tag});
-  },
-  componentDidMount:function(){
-    // $('#form-modal').on('shown.bs.modal', function () {
-    //   $("#inputTagName").focus();
-    // });
+  componentDidMount(){
+    this.inputTag.focus();
   },
   render: function(){
-    var fields = (<div className="form-group">
-    <label htmlFor="inputTagName">Tag Name</label>
-    <input required="required" type="text" className="form-control" id="inputTagName" value={this.state.tagName} onChange={this.handleNameChange}/>
-  </div>)
+    let tag = "";
+    if(this.props.params.id)
+    tag = JSON.parse(localStorage.tags)[this.props.params.id];
     return(
-       <ModalFormTemplate fields= {fields} actionText = {this.props.actionText} handleSubmit={this.handleSubmit}/>
-    
+      <div>
+       <form onSubmit={this.handleSubmit}>
+<div className="form-group">
+    <label htmlFor="inputTagName">Tag Name</label>
+    <input type="text" className="form-control" defaultValue={tag} ref={input => this.inputTag = input} />
+    </div>
+    <button type="submit" className="btn btn-default" >Save</button>
+
+       </form>
+    </div>
     )
   }});
 
