@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'
 import { browserHistory } from 'react-router'
-
+import {Tooltip, OverlayTrigger, ButtonToolbar, Button, Glyphicon} from "react-bootstrap"
 var Channels = React.createClass({
   getInitialState: function(){
     return {channels:[],
@@ -51,6 +51,8 @@ var Channels = React.createClass({
       }
       
     channels = channels.map((channel, index) => {
+      let editOverlay = <Tooltip id="editTooltip"><strong>Edit Channel</strong></Tooltip>;
+      let deleteOverlay = <Tooltip id="deleteTooltip"><strong>Delete Channel</strong></Tooltip>;
       return(
         <tr id={index} data-channelname={channel.name} data-channelurl={channel.url} data-channeltags={channel.tags} key={index}>
           <td>
@@ -61,12 +63,15 @@ var Channels = React.createClass({
             {channel.tags.join(", ")}
           </td>
           <td>
-            <button data-toggle="tooltip" title="Edit channel" onClick={self.editChannel.bind(this, index)}  type="button" className="btn btn-default">
-  <span className="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-          <button data-toggle="tooltip" title="Delete channel" onClick={self.deleteChannel.bind(this, index)}  type="button" className="btn btn-default">
-  <span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <ButtonToolbar>
+    <OverlayTrigger placement="top" overlay={editOverlay}>
+      <Button bsStyle="default" onClick={self.editChannel.bind(this, index)}><Glyphicon glyph="edit" /></Button>
+    </OverlayTrigger>
 
-            
+    <OverlayTrigger placement="top" overlay={deleteOverlay}>
+      <Button bsStyle="default" onClick={self.deleteChannel.bind(this, index)}><Glyphicon glyph="remove" /></Button>
+    </OverlayTrigger>
+  </ButtonToolbar>            
           </td>
         </tr>
       )

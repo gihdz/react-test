@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'
 import { browserHistory } from 'react-router'
+import {Tooltip, OverlayTrigger, ButtonToolbar, Button, Glyphicon} from "react-bootstrap"
 
 var Tags = React.createClass({
   getInitialState: function(){
@@ -42,22 +43,28 @@ var Tags = React.createClass({
     );
     if(this.state.tags.length > 0){         
     var tags = this.state.tags.map((tag, index) => {
+      let viewChannelOverlay = <Tooltip id="viewTooltip"><strong>View channels</strong></Tooltip>;
+      let editOverlay = <Tooltip id="editTooltip"><strong>Edit Tag</strong></Tooltip>;
+      let deleteOverlay = <Tooltip id="deleteTooltip"><strong>Delete Tag</strong></Tooltip>;
       return(
         <tr id={index} data-tagname={tag}  key={index}>
           <td>          
           {tag}
           </td>
           <td>
-            <Link to={"/channels/tag/" + tag} data-toggle="tooltip" title="View channels" data-placement="top" className="btn btn-default">
-              <span className="glyphicon glyphicon-list" aria-hidden="true"></span></Link>
-            
-            <button data-toggle="tooltip" title="Edit tag" onClick={this.editTag.bind(this, index)}  type="button" className="btn btn-default">
-  <span className="glyphicon glyphicon-edit" aria-hidden="true"></span>
-</button>
-          <button data-toggle="tooltip" title="Delete tag" onClick={this.deleteTag.bind(this, index)}  type="button" className="btn btn-default">
-  <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
-</button>
-            
+                 <ButtonToolbar>
+                    <OverlayTrigger placement="top" overlay={viewChannelOverlay}>
+      <Link to={"/channels/tag/" + tag} className="btn btn-default">
+              <Glyphicon glyph="list"/></Link>
+    </OverlayTrigger>
+    <OverlayTrigger placement="top" overlay={editOverlay}>
+      <Button bsStyle="default"  onClick={this.editTag.bind(this, index)}><Glyphicon glyph="edit" /></Button>
+    </OverlayTrigger>
+
+    <OverlayTrigger placement="top" overlay={deleteOverlay}>
+      <Button bsStyle="default" onClick={this.deleteTag.bind(this, index)}><Glyphicon glyph="remove" /></Button>
+    </OverlayTrigger>
+  </ButtonToolbar>   
           </td>
         </tr>
       )

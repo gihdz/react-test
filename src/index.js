@@ -8,6 +8,9 @@ import TagForm from "./mods/TagForm"
 import Tags from './mods/Tags'
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
+// import $ from "jquery"
+// window.jQuery = $;
+// require('bootstrap/dist/js/bootstrap.min.js');
 
 
 // ReactDOM.render(
